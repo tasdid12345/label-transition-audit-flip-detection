@@ -23,6 +23,26 @@ Results are written to `results.json` (and a bar chart to `figures/`).
 
 Results are written to results.json.
 
+## Results (latest run)
+
+On scikit-learn digits (simulated federations, 30% label-flipping clients), a standard cosine-to-median update outlier detector reached 54% client-level ROC-AUC on test federations, while my class-balanced LightGBM on label-transition features reached 96% on the same test federations, though its false-alarm rate was 17% versus 1%.
+
+| Metric | Value |
+|---|---|
+| baseline_score | 0.5367 |
+| improved_score | 0.9574 |
+| improvement | 0.4207 |
+| baseline_score_std | 0.005818 |
+| improved_score_std | 0.003851 |
+| baseline_f1 | 0.02128 |
+| improved_f1 | 0.7846 |
+| baseline_fpr | 0.0127 |
+| improved_fpr | 0.1738 |
+
+Run on 2026-10-19. Full output: [results.json](results.json) · [run.log](run.log)
+
+Notes: Stand-in for a non-public federated setting: digits is small (federations of 20 clients with 80 images each), so variance is high; results are over seeds 42-44. n_train/n_test are image-level counts of the single stratified split (70/30); the client pool is a further split of the train part (reference vs. client), and test federations are drawn only from the test part. Calibration and training federations come from the client pool. Hyper-parameter grid chosen by grouped CV on training federations only. Conformal guarantee is marginal and assumes exchangeable clients. LightGBM source: https://github.com/microsoft/LightGBM.
+
 ## Reference
 
 This project is motivated by the following paper:
