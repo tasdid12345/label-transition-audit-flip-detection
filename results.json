@@ -1,0 +1,29 @@
+{
+  "question": "Can label-transition features from a reference model, scored by a gradient-boosted classifier with a conformally calibrated threshold, detect label-flipping federated clients better than a standard update-cosine outlier detector?",
+  "method": "Simulated federations (20 Dirichlet-skewed clients, 30% flip one source class to a target) on sklearn digits; server reference logistic regression; baseline = robust z-score of update cosine to median; improved = class-balanced LightGBM on 10x10 transition matrix plus cosine features, threshold by split-conformal at 10% FPR on calibration federations.",
+  "dataset": {
+    "name": "scikit-learn digits (load_digits, bundled)",
+    "source_url": "https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_digits.html",
+    "n_rows": 1797,
+    "n_train": 1257,
+    "n_test": 540,
+    "same_as_paper": false,
+    "baseline_is_papers_method": false
+  },
+  "metric_name": "client-level ROC-AUC on test federations",
+  "higher_is_better": true,
+  "baseline": "Standard client-update outlier detector: cosine of each client's one-step update to the median update, flagged by a robust z-score threshold (no learning).",
+  "improved": "Class-balanced LightGBM on the client's 10x10 label-transition matrix (reference-model predictions vs. client labels) plus update-cosine features; flag threshold from split-conformal calibration at 10% false-alarm rate.",
+  "metrics": {
+    "baseline_score": 0.5367239858906525,
+    "improved_score": 0.9573765432098765,
+    "improvement": 0.420652557319224,
+    "baseline_score_std": 0.005817553285596755,
+    "improved_score_std": 0.0038512790611707343,
+    "baseline_f1": 0.021277806224042784,
+    "improved_f1": 0.7846232646761054,
+    "baseline_fpr": 0.0126984126984127,
+    "improved_fpr": 0.17380952380952383
+  },
+  "notes": "Stand-in for a non-public federated setting: digits is small (federations of 20 clients with 80 images each), so variance is high; results are over seeds 42-44. n_train/n_test are image-level counts of the single stratified split (70/30); the client pool is a further split of the train part (reference vs. client), and test federations are drawn only from the test part. Calibration and training federations come from the client pool. Hyper-parameter grid chosen by grouped CV on training federations only. Conformal guarantee is marginal and assumes exchangeable clients. LightGBM source: https://github.com/microsoft/LightGBM."
+}
